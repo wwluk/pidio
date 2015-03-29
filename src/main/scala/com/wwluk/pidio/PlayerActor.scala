@@ -11,7 +11,17 @@ class PlayerActor(api: PlayerApi) extends Actor with ActorLogging{
     case GetStatus =>
       val status = api.status
       sender ! status
+
+    case PlayCurrent =>
+      sender ! api.playCurrent
+
+    case Stop =>
+      sender ! api.stop
   }
 }
 
 case object GetStatus
+
+case object PlayCurrent
+
+case object Stop

@@ -17,11 +17,9 @@ trait RestServer {
   implicit val timeout = Timeout(5 seconds)
 
   def api: PlayerApi
-
   val actor = system.actorOf(PlayerActor.props(api), "api")
 
   import system.dispatcher
-
   val route: Route =
     path("status") {
       get {
@@ -30,7 +28,23 @@ trait RestServer {
           future.mapTo[String]
         }
       }
-    }
+    } ~
+      path("play") {
+        get {
+          complete {
+            val future = actor ? PlayCurrent
+            future.mapTo[String]
+          }
+        }
+      } ~
+      path("stop") {
+        get {
+          complete {
+            val future = actor ? Stop
+            future.mapTo[String]
+          }
+        }
+      }
 
   val serverBinding = Http(system).bind(interface = "0.0.0.0", port = 8081)
 

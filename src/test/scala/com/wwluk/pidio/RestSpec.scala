@@ -15,9 +15,7 @@ import scala.concurrent.Future
 
 class RestSpec extends FlatSpec with Matchers with ScalaFutures {
   implicit val testSystem = ActorSystem("test-system")
-
   import testSystem.dispatcher
-
   implicit val fm = ActorFlowMaterializer()
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(2, Seconds), interval = Span(5, Millis))
@@ -26,21 +24,34 @@ class RestSpec extends FlatSpec with Matchers with ScalaFutures {
     override val api: PlayerApi = new MockApi
   }
 
+  def GETRequest(uri: String) = sendRequest(HttpRequest(uri = uri))
+
   def sendRequest(req: HttpRequest) =
     Source.single(req).via(
       Http(testSystem).outgoingConnection(host = "127.0.0.1",
         port = 8081)
     ).runWith(Sink.head)
 
-
-  "Rest" should "return mock status" in {
-    val request: Future[HttpResponse] = sendRequest(HttpRequest(uri = "/status"))
-    whenReady(request) { response =>
+  def validateResponse(responseFuture: Future[HttpResponse], responseContent: String) = {
+    whenReady(responseFuture) { response =>
       val stringFuture = Unmarshal(response.entity).to[String]
       whenReady(stringFuture) { str =>
-        str should include("Artist")
+        str should include(responseContent)
       }
     }
+  }
+
+
+  "Rest" should "return mock status" in {
+    validateResponse(GETRequest("/status"), "Artist")
+  }
+
+  it should "play" in {
+    validateResponse(GETRequest("/play"), "playing")
+  }
+
+  it should "stop" in {
+    validateResponse(GETRequest("/stop"), "stopped")
   }
 
 }
