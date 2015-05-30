@@ -43,7 +43,7 @@ class RestSpec extends FlatSpec with Matchers with ScalaFutures {
 
 
   "Rest" should "return mock status" in {
-    validateResponse(GETRequest("/status"), "Artist")
+    validateResponse(GETRequest("/status"), "HOT")
   }
 
   it should "play" in {
