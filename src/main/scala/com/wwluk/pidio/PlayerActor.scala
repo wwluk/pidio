@@ -17,6 +17,12 @@ class PlayerActor(api: PlayerApi) extends Actor with ActorLogging{
 
     case Stop =>
       sender ! api.stop
+
+    case GetVolume =>
+      sender ! api.volume
+
+    case SetVolume(volume) =>
+      sender ! api.volume(volume)
   }
 }
 
@@ -25,3 +31,10 @@ case object GetStatus
 case object PlayCurrent
 
 case object Stop
+
+case object GetVolume
+
+case class SetVolume(vol: Int) {
+  require(vol >= 0)
+  require(vol <= 100)
+}

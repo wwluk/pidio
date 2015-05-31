@@ -8,6 +8,10 @@ trait PlayerApi {
   def stop: String
 
   def s: Status
+
+  def volume: Option[Int]
+
+  def volume(v: Int): Unit
 }
 
 class MPCApi extends PlayerApi {
@@ -19,6 +23,12 @@ class MPCApi extends PlayerApi {
   override def stop: String = "mpc stop" !!
 
   override def s: Status = ???
+
+  override def volume: Option[Int] = {
+    """volume: (\d+)%""".r.findFirstMatchIn("mpc volume" !!).map(_.group(1).toInt)
+  }
+
+  override def volume(v: Int): Unit = s"mpc volume $v" !!
 }
 
 class MockApi extends PlayerApi {
@@ -34,4 +44,8 @@ volume: 90%   repeat: off   random: off   single: off   consume: off"""
 
 
   implicit def stringToStatus(s: String) = Status("a", "b", """volume: (\d+)%""".r.findFirstMatchIn(s).map(_.group(1).toInt))
+
+  override def volume: Option[Int] = Some(90)
+
+  override def volume(v: Int): Unit = println("got volume: " + v)
 }
