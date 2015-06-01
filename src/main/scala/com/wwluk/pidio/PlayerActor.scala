@@ -3,7 +3,10 @@ package com.wwluk.pidio
 import akka.actor.{Actor, ActorLogging, Props}
 
 object PlayerActor {
-  def props(api: PlayerApi): Props = Props(new PlayerActor(api))
+  def props(api: PlayerApi): Props = {
+    require(api != null)
+    Props(new PlayerActor(api))
+  }
 }
 
 class PlayerActor(api: PlayerApi) extends Actor with ActorLogging{

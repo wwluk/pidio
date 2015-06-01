@@ -32,9 +32,9 @@ trait RestServer extends Protocols {
   implicit val materializer = ActorFlowMaterializer()
   implicit val timeout = Timeout(5 seconds)
 
-  def api: PlayerApi
+  val api: PlayerApi
 
-  val actor = system.actorOf(PlayerActor.props(api), "api")
+  lazy val actor = system.actorOf(PlayerActor.props(api), "api")
 
   implicit val executor = system.dispatcher
   val route: Route = {
@@ -114,5 +114,5 @@ trait RestServer extends Protocols {
 
 
 object RestApp extends App with RestServer {
-  override def api: PlayerApi = new MockApi
+  override val api: PlayerApi = new MockApi
 }

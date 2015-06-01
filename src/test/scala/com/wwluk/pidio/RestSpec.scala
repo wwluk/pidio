@@ -18,10 +18,10 @@ class RestSpec extends FlatSpec with Matchers with ScalaFutures {
   import testSystem.dispatcher
   implicit val fm = ActorFlowMaterializer()
   implicit val defaultPatience =
-    PatienceConfig(timeout = Span(2, Seconds), interval = Span(5, Millis))
+    PatienceConfig(timeout = Span(5, Seconds), interval = Span(100, Millis))
 
   val server = new RestServer {
-    override val api: PlayerApi = new MockApi
+    val api: PlayerApi = new MockApi
   }
 
   def GETRequest(uri: String) = sendRequest(HttpRequest(uri = uri))
@@ -52,6 +52,10 @@ class RestSpec extends FlatSpec with Matchers with ScalaFutures {
 
   it should "stop" in {
     validateResponse(GETRequest("/stop"), "stopped")
+  }
+
+  it should "return volume" in {
+    validateResponse(GETRequest("/volume"), "90")
   }
 
 }
