@@ -11,7 +11,7 @@ trait PlayerApi {
 
   def volume: Option[Int]
 
-  def volume(v: Int): Unit
+  def volume(v: Int): String
 }
 
 class MPCApi extends PlayerApi {
@@ -28,7 +28,7 @@ class MPCApi extends PlayerApi {
     """volume: (\d+)%""".r.findFirstMatchIn("mpc volume" !!).map(_.group(1).toInt)
   }
 
-  override def volume(v: Int): Unit = s"mpc volume $v" !!
+  override def volume(v: Int): String = s"mpc volume $v" !!
 }
 
 class MockApi extends PlayerApi {
@@ -47,5 +47,5 @@ volume: 90%   repeat: off   random: off   single: off   consume: off"""
 
   override def volume: Option[Int] = Some(90)
 
-  override def volume(v: Int): Unit = println("got volume: " + v)
+  override def volume(v: Int): String = s"volume: $v"
 }

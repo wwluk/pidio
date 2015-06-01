@@ -20,11 +20,15 @@ class RestSpec extends FlatSpec with Matchers with ScalaFutures {
   implicit val defaultPatience =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(100, Millis))
 
+  val testApi: PlayerApi = new MockApi
+
   val server = new RestServer {
-    val api: PlayerApi = new MockApi
+    val api: PlayerApi = testApi
   }
 
   def GETRequest(uri: String) = sendRequest(HttpRequest(uri = uri))
+
+  def POSTRequest(uri: String) = sendRequest(HttpRequest(HttpMethods.POST, uri))
 
   def sendRequest(req: HttpRequest) =
     Source.single(req).via(
@@ -56,6 +60,10 @@ class RestSpec extends FlatSpec with Matchers with ScalaFutures {
 
   it should "return volume" in {
     validateResponse(GETRequest("/volume"), "90")
+  }
+
+  it should "set volume" in {
+    validateResponse(POSTRequest("/volume/33"), "33")
   }
 
 }
