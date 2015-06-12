@@ -3,6 +3,7 @@ package com.wwluk.pidio
 import akka.actor.ActorSystem
 import akka.http.Http
 import akka.http.marshallers.sprayjson.SprayJsonSupport._
+import akka.http.model.HttpMethods._
 import akka.http.model.headers._
 import akka.http.server.Directives._
 import akka.http.server.{PathMatchers, Route}
@@ -49,8 +50,16 @@ trait RestServer extends Protocols {
       path("play") {
         get {
           complete {
-            val future = actor ? PlayCurrent
-            future.mapTo[String]
+            val f = actor ? PlayCurrent
+            f.mapTo[String]
+          }
+        }
+      } ~
+      path("play" / IntNumber) { position =>
+        get {
+          complete {
+            val f = actor ? Play(position)
+            f.mapTo[String]
           }
         }
       } ~
@@ -127,7 +136,6 @@ trait RestServer extends Protocols {
   val serverBinding = Http(system).bind(interface = "0.0.0.0", port = 8081)
 
   serverBinding.to(Sink.foreach(conn => {
-    import akka.http.model.HttpMethods._
 
     val corsHeaders = List(`Access-Control-Allow-Origin`(HttpOriginRange.*),
       `Access-Control-Allow-Methods`(GET, POST, OPTIONS, DELETE),
@@ -138,9 +146,4 @@ trait RestServer extends Protocols {
 
     conn handleWith Route.handlerFlow(routeWithHeaders)
   })).run()
-}
-
-
-object RestApp extends App with RestServer {
-  override val api: PlayerApi = new MockApi
 }

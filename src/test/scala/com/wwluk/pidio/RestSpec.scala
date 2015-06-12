@@ -104,4 +104,10 @@ volume: 90%   repeat: off   random: off   single: off   consume: off"""
     validateResponse(sendRequest(request), "added")
     (testApi.addSong _) verify song
   }
+
+  it should "play given song" in {
+    (testApi.play _) when 3 returns "track 3"
+    validateResponse(GETRequest("/play/3"), "track 3")
+    (testApi.play _) verify 3
+  }
 }

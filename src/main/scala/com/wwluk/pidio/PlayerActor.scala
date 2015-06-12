@@ -18,6 +18,9 @@ class PlayerActor(api: PlayerApi) extends Actor with ActorLogging{
     case PlayCurrent =>
       sender ! api.playCurrent
 
+    case Play(position) =>
+      sender ! api.play(position)
+
     case Stop =>
       sender ! api.stop
 
@@ -46,6 +49,8 @@ case object GetStatus
 
 case object PlayCurrent
 
+case class Play(position: Int)
+
 case object Stop
 
 case object GetVolume
@@ -57,6 +62,6 @@ case class SetVolume(vol: Int) {
 
 case object GetPlaylist
 
-case class Remove(pos: Int)
+case class Remove(position: Int)
 
 case class Add(uri: String)
