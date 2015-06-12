@@ -25,7 +25,20 @@ class PlayerActor(api: PlayerApi) extends Actor with ActorLogging{
       sender ! api.volume
 
     case SetVolume(volume) =>
-      sender ! api.volume(volume)
+      sender ! api.setVolume(volume)
+
+    case GetPlaylist =>
+      sender ! api.playlist
+
+    case Remove(pos) => {
+      api.removeSong(pos)
+      sender ! "removed"
+    }
+
+    case Add(uri) => {
+      api.addSong(uri)
+      sender ! "added"
+    }
   }
 }
 
@@ -41,3 +54,9 @@ case class SetVolume(vol: Int) {
   require(vol >= 0)
   require(vol <= 100)
 }
+
+case object GetPlaylist
+
+case class Remove(pos: Int)
+
+case class Add(uri: String)

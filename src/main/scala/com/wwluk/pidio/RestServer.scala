@@ -12,7 +12,6 @@ import akka.stream.scaladsl.Sink
 import akka.util.Timeout
 import spray.json.DefaultJsonProtocol
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
 
@@ -22,6 +21,7 @@ trait Protocols extends DefaultJsonProtocol {
   implicit val testClassFormat = jsonFormat2(TestClass.apply)
   //  implicit val statusFormat = jsonFormat(Status, "artist", "volume")
   implicit val statusFormat = jsonFormat3(Status.apply)
+  implicit val playlistFormat = jsonFormat1(Playlist.apply)
   //  implicit val stateFormat = jsonFormat[State] {
 
 
@@ -93,7 +93,35 @@ trait RestServer extends Protocols {
           api.s
         }
       }
-    }
+    } ~
+      pathPrefix("playlist") {
+        get {
+          complete {
+            val f = actor ? GetPlaylist
+            f.mapTo[Playlist]
+          }
+        } ~
+          path("remove" / IntNumber) { pos =>
+            delete {
+              complete {
+                val f = actor ? Remove(pos)
+                f.mapTo[String]
+              }
+            }
+          } ~
+          path("add") {
+            post {
+              entity(as[String]) { uri =>
+                complete {
+                  val f = actor ? Add(uri)
+                  f.mapTo[String]
+                }
+
+              }
+            }
+          }
+      }
+
   }
 
   val serverBinding = Http(system).bind(interface = "0.0.0.0", port = 8081)

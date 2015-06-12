@@ -9,5 +9,7 @@ package object pidio {
     val Playing, Paused, Stopped = Value
   }
 
+  case class Playlist(playlist: Seq[String])
+
 }
 
