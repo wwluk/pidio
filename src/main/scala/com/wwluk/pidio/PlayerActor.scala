@@ -33,15 +33,13 @@ class PlayerActor(api: PlayerApi) extends Actor with ActorLogging{
     case GetPlaylist =>
       sender ! api.playlist
 
-    case Remove(pos) => {
+    case Remove(pos) =>
       api.removeSong(pos)
       sender ! "removed"
-    }
 
-    case Add(uri) => {
+    case Add(uri) =>
       api.addSong(uri)
       sender ! "added"
-    }
   }
 }
 

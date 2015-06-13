@@ -89,7 +89,7 @@ volume: 90%   repeat: off   random: off   single: off   consume: off"""
   }
 
   it should "return playlist" in {
-    (testApi.playlist _) when() returns Playlist(Seq("track 1", "track 2", "track 3"))
+    (testApi.playlist _) when() returns Playlist(Seq("track 1", "track 2", "track 3").map(track => PlaylistEntry(0, track)))
     validateResponse(GETRequest("/playlist"), Seq("track 1", "track 2"))
   }
 

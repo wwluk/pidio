@@ -14,6 +14,7 @@ import akka.util.Timeout
 import spray.json.DefaultJsonProtocol
 
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 
 case class TestClass(a: String, b: Int)
@@ -22,6 +23,7 @@ trait Protocols extends DefaultJsonProtocol {
   implicit val testClassFormat = jsonFormat2(TestClass.apply)
   //  implicit val statusFormat = jsonFormat(Status, "artist", "volume")
   implicit val statusFormat = jsonFormat3(Status.apply)
+  implicit val playlistEntryFormat = jsonFormat2(PlaylistEntry.apply)
   implicit val playlistFormat = jsonFormat1(Playlist.apply)
   //  implicit val stateFormat = jsonFormat[State] {
 

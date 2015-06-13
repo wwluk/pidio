@@ -1,3 +1,4 @@
+import scala.language.implicitConversions
 import scala.util.{Failure, Try}
 
 val s = """>>> POLSKASTACJA .PL >>> - HOT 100 - Goraca Setka Nowych HITOW (Polskie Radio): Aronchupa - I'm An Albatraoz
