@@ -135,6 +135,12 @@ trait RestServer extends Protocols {
 
   }
 
+  val optionsRoute = {
+    options {
+      complete("")
+    }
+  }
+
   val serverBinding = Http(system).bind(interface = "0.0.0.0", port = 8081)
 
   serverBinding.to(Sink.foreach(conn => {
@@ -143,7 +149,7 @@ trait RestServer extends Protocols {
       `Access-Control-Allow-Methods`(GET, POST, OPTIONS, DELETE),
       `Access-Control-Allow-Headers`("Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding, Accept-Language, Host, Referer, User-Agent"))
     val routeWithHeaders = respondWithHeaders(corsHeaders) {
-      route
+      route ~ optionsRoute
     }
 
     conn handleWith Route.handlerFlow(routeWithHeaders)
