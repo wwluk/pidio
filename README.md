@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/wwluk/pidio.svg?branch=master)](https://travis-ci.org/wwluk/pidio)
+[![Codacy Badge](https://www.codacy.com/project/badge/bd91bce1c2784d3db57f55f67babef40)](https://www.codacy.com/app/wwluk/pidio)
 
 # PiDio - REST interface for mpd
 
