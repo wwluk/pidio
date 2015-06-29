@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wwluk/pidio.svg?branch=master)](https://travis-ci.org/wwluk/pidio)
+
 # PiDio - REST interface for mpd
 
 This project aims to provide REST interface for the Linux Music Player Daemon.
