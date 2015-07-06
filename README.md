@@ -23,7 +23,7 @@ sbt assembly
 
 Resulting jar can be run in the following way:
 ```
-java -jar pidio-assembly-0.1.jar
+java -jar pidio-assembly-0.1.0.jar
 ```
 
 
